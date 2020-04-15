@@ -1,0 +1,9 @@
+cazibesini kullanarak istediği kişileri birbirine düşürebilir. 
+(Seçtiği iki kişiyi birbirine düşürür ve öldürme yeteneği olan kazanır. 
+Eğer öldürme yeteneği olan yoksa hiçbir şey olmaz. 
+Eğer savaşan iki kişi de tanrıysa bot mesaj atar. 
+''İki tanrı birbirine girdi ve 1 kazananı oldu.''.
+Eğer birbirine giren Poseidon - Hades - Zeus'tan ikisiyse, 
+''iki tanrı birbirine girdi ama kazanan olmadı.'' yazar. 
+Böylece aphrodite iki tarafın da güçlü olduğunu anlayabilir. 
+Örn: Ares ve Zeus savaşmış olabilir.. Zeus daha güçlü olduğu için Ares'i öldürür.)

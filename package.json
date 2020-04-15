@@ -1,0 +1,28 @@
+{
+  "name": "town-of-olympos",
+  "version": "0.5.2",
+  "description": "Town of Olympos",
+  "author": "ria",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "dependencies": {
+    "discord.js": "12.1.1",
+    "express": "4.17.1",
+    "moment": "2.24.0",
+    "quick.db": "7.0.0-b22"
+  },
+  "engines": {
+    "node": "12.16.1"
+  },
+  "repository": {
+    "url": "https://town-of-olympos.glitch.me"
+  },
+  "license": "MIT",
+  "keywords": [
+    "node",
+    "glitch",
+    "express"
+  ]
+}

@@ -1,0 +1,26 @@
+// oyun erken sonlandırıldı
+const Discord = require('discord.js');
+const ayarlar = require("/app/ayarlar");
+const db = require('quick.db');
+const path = require('path');
+const moment = require("moment");
+moment.locale("tr");
+
+const komutAdı = __filename.replace(__dirname, "").replace("/", "").replace(".js", "")
+
+exports.run = async (client, message, args) => {
+    await db.set(`tooGames_${message.guild.id}.${args[0]}.day.current`, parseInt(args[1]))
+    message.reply(args[0] + " oyunu " + (args[1] == "0" ? "gece" : "gündüz") + " olarak ayarlandı.")
+};
+
+exports.conf = {
+    enabled: true,
+    guildOnly: true,
+    aliases: [],
+    perms: ["TOO Yetkili"]
+};
+exports.help = {
+    name: komutAdı,
+    description: ``,
+    usage: `${komutAdı}`
+};

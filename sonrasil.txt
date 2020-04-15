@@ -1,0 +1,442 @@
+  /*
+                switch (rol) {
+                    case "Zeus":
+                        Zeus(tooGame, aliveID, rol, props);
+                        function Zeus() {
+                            let targetID = props.skills.selectedID;
+                            if (!targetID) {
+                                // yeteneğini kullanmamış
+                                return;
+                            }
+                            let targetRole = client.findRole(tooGame, targetID);
+    
+    
+                            let yardakçıRol = "Poseidon" // öldüren kişi olarak gözükecek rol
+                            let yardakçıHasToAlive = true; // öldüren kişi olarak gözükecek role ait gerçek kişinin hayatta olması mı gerekiyor? hayırsa öldüren kişi rolün kendisi olarak gözükür
+                            let yardakçıID = client.findUserIDFromRole(yardakçıRol);
+    
+    
+                            if (tooGame.roleProps[targetRole].skills && tooGame.roleProps[targetRole].skills.killVisitor) {
+                                // saldırdığı kişinin ziyaretçi öldürme yeteneği açık
+                                if (typeof yardakçıID == "array")
+                                    yardakçıID.forEach(yardakçı => {
+                                        client.killAtNight(tooGame, yardakçı, targetID)
+                                    });
+                                else
+                                    client.killAtNight(tooGame, yardakçıID, targetID)
+                            }
+    
+                            if (typeof yardakçıID == "array")
+                                yardakçıID = yardakçıID[0];
+    
+                            let killerID = yardakçıHasToAlive ? (tooGame.alive.hasOwnProperty(yardakçıID) ? yardakçıID : aliveID) : yardakçıID;
+    
+                            if (tooGame.roleProps[targetRole].isProtected) {// saldırdığı kişinin koruması var
+                                let infoEmbed = client.embed()
+                                    .setTitle("SALDIRI BAŞARISIZ OLDU!")
+                                    .setDescription("SEÇTİĞİN KİŞİDE KORUMA VAR!")
+                                    .setColor("RED")
+                                    .setFooter("Town of Olympos - #" + tooGame.id)
+                                client.sendEmbedToAlive(tooGame, infoEmbed, aliveID);
+                                return;
+                            }
+    
+    
+                            client.killAtNight(tooGame, targetID, killerID)
+                            let infoEmbed = client.embed()
+                                .setTitle("SALDIRI BAŞARILI OLDU!")
+                                .setDescription("SEÇTİĞİN KİŞİ " + (killerID == aliveID ? "ÖLDÜ" : (yardakçıRol.toUpperCase() + " TARAFINDAN ÖLDÜRÜLDÜ")) + "!")
+                                .setColor("GREEN")
+                                .setFooter("Town of Olympos - #" + tooGame.id)
+                            client.sendEmbedToAlive(tooGame, infoEmbed, aliveID);
+                        }
+                        break;
+                    case "Poseidon":
+                        Poseidon();
+                        function Poseidon() {
+                            let zeusID = client.findUserIDFromRole("Zeus");
+    
+                            if (tooGame.alive.hasOwnProperty(zeusID))
+                                return; // zeus yaşıyorsa poseidon'a iş düşmez
+    
+                            let targetID = props.skills.selectedID;
+                            if (!targetID) {
+                                // yeteneğini kullanmamış
+                                return;
+                            }
+                            let targetRole = client.findRole(tooGame, targetID);
+    
+                            if (tooGame.roleProps[targetRole].skills && tooGame.roleProps[targetRole].skills.killVisitor) {
+                                // saldırdığı kişinin ziyaretçi öldürme yeteneği açık
+                                client.killAtNight(tooGame, aliveID, targetID)
+                            }
+    
+                            if (tooGame.roleProps[targetRole].isProtected) {// saldırdığı kişinin koruması var
+                                let infoEmbed = client.embed()
+                                    .setTitle("SALDIRI BAŞARISIZ OLDU!")
+                                    .setDescription("SEÇTİĞİN KİŞİDE KORUMA VAR!")
+                                    .setColor("RED")
+                                    .setFooter("Town of Olympos - #" + tooGame.id)
+                                client.sendEmbedToAlive(tooGame, infoEmbed, aliveID);
+                                return;
+                            }
+    
+                            let killerID = aliveID;
+    
+                            client.killAtNight(tooGame, targetID, killerID)
+                            let infoEmbed = client.embed()
+                                .setTitle("SALDIRI BAŞARILI OLDU!")
+                                .setDescription("SEÇTİĞİN KİŞİ ÖLDÜ!")
+                                .setColor("GREEN")
+                                .setFooter("Town of Olympos - #" + tooGame.id)
+                            client.sendEmbedToAlive(tooGame, infoEmbed, aliveID);
+                        }
+                        break;
+                    case "Hades":
+                        Hades();
+                        function Hades() {
+                            let targetID = props.skills.selectedID;
+                            if (!targetID) {
+                                // yeteneğini kullanmamış
+                                return;
+                            }
+                            let targetRole = client.findRole(tooGame, targetID);
+    
+                            if (tooGame.roleProps[targetRole].skills && tooGame.roleProps[targetRole].skills.killVisitor) {
+                                // saldırdığı kişinin ziyaretçi öldürme yeteneği açık
+                                client.killAtNight(tooGame, aliveID, targetID)
+                            }
+    
+                            if (tooGame.roleProps[targetRole].isProtected) {// saldırdığı kişinin koruması var
+                                let infoEmbed = client.embed()
+                                    .setTitle("TEHDİT BAŞARISIZ OLDU!")
+                                    .setDescription("SEÇTİĞİN KİŞİDE KORUMA VAR!")
+                                    .setColor("RED")
+                                    .setFooter("Town of Olympos - #" + tooGame.id)
+                                client.sendEmbedToAlive(tooGame, infoEmbed, aliveID);
+                                return;
+                            }
+    
+                            let changedRole = "Poseidon";
+    
+                            let rnd = client.getRandomInt(1, 6);
+                            if (rnd == 1) {
+                                // eski rolü kaldır
+                                db.set(`tooGames_${guild.id}.${tooGame.id}.roles.${targetRole}`, db.get(`tooGames_${guild.id}.${tooGame.id}.roles.${targetRole}`).filter(id => id != targetID))
+                                // yeni rolü kaydet
+                                db.push(`tooGames_${guild.id}.${tooGame.id}.roles.${changedRole}`, targetID)
+                                if (tooGame.alive.hasOwnProperty(targetID))
+                                    db.set(`tooGames_${guild.id}.${tooGame.id}.alive.${targetID}`, changedRole)
+                                if (tooGame.dead.hasOwnProperty(targetID))
+                                    db.set(`tooGames_${guild.id}.${tooGame.id}.dead.${targetID}`, changedRole)
+    
+                                let changedInfoEmbed = client.embed()
+                                    .setAuthor("ROL DEĞİŞİMİ GERÇEKLEŞTİ!")
+                                    .setTitle("YENİ ROLÜN : **" + changedRole.toUpperCase() + "**!")
+                                    .setDescription("Hades seni tehdit etti ve tehditinde başarılı oldu.")
+                                    .setColor("RED")
+                                    .setFooter("Town of Olympos - #" + tooGame.id)
+                                client.sendEmbedToAlive(tooGame, changedInfoEmbed, targetID);
+                                let infoEmbed = client.embed()
+                                    .setTitle("TEHDİT BAŞARILI OLDU!")
+                                    .setDescription("SEÇTİĞİN KİŞİ ARTIK BİR **" + changedRole.toUpperCase() + "**!")
+                                    .setColor("GREEN")
+                                    .setFooter("Town of Olympos - #" + tooGame.id)
+                                client.sendEmbedToAlive(tooGame, infoEmbed, aliveID);
+                            } else {
+                                let infoEmbed = client.embed()
+                                    .setTitle("TEHDİT BAŞARISIZ OLDU!")
+                                    .setDescription("SEÇTİĞİN KİŞİNİN ROLÜ DEĞİŞMEDİ!")
+                                    .setColor("RED")
+                                    .setFooter("Town of Olympos - #" + tooGame.id)
+                                client.sendEmbedToAlive(tooGame, infoEmbed, aliveID);
+                            }
+                        }
+                        break;
+                    case "Ares":
+                        Ares();
+                        function Ares() {
+                            let targetID = props.skills.selectedID;
+                            if (!targetID) {
+                                // yeteneğini kullanmamış
+                                return;
+                            }
+                            let targetRole = client.findRole(tooGame, targetID);
+    
+                            if (ayarlar.rolPaketleri.büyükTanrılar.some(r => r == targetRole)) {
+                                // büyük tanrıya saldırmış
+                                let infoEmbed = client.embed()
+                                    .setTitle("SALDIRI BAŞARISIZ OLDU!")
+                                    .setDescription("Güçlü bir tanrıya saldırmış olmalısın.")
+                                    .setColor("RED")
+                                    .setFooter("Town of Olympos - #" + tooGame.id)
+                                client.sendEmbedToAlive(tooGame, infoEmbed, aliveID);
+                                return;
+                            }
+    
+                            if (tooGame.roleProps[targetRole].skills && tooGame.roleProps[targetRole].skills.killVisitor) {
+                                // saldırdığı kişinin ziyaretçi öldürme yeteneği açık
+                                client.killAtNight(tooGame, aliveID, targetID)
+                            }
+    
+                            if (tooGame.roleProps[targetRole].isProtected) {// saldırdığı kişinin koruması var
+                                let infoEmbed = client.embed()
+                                    .setTitle("SALDIRI BAŞARISIZ OLDU!")
+                                    .setDescription("SEÇTİĞİN KİŞİDE KORUMA VAR!")
+                                    .setColor("RED")
+                                    .setFooter("Town of Olympos - #" + tooGame.id)
+                                client.sendEmbedToAlive(tooGame, infoEmbed, aliveID);
+                                return;
+                            }
+    
+                            let killerID = aliveID;
+    
+                            client.killAtNight(tooGame, targetID, killerID)
+                            let infoEmbed = client.embed()
+                                .setTitle("SALDIRI BAŞARILI OLDU!")
+                                .setDescription("SEÇTİĞİN KİŞİ ÖLDÜ!")
+                                .setColor("GREEN")
+                                .setFooter("Town of Olympos - #" + tooGame.id)
+                            client.sendEmbedToAlive(tooGame, infoEmbed, aliveID);
+                        }
+                        break;
+                    case "Aphrodite":
+                        Aphrodite();
+                        function Aphrodite() {
+                            let targetID1 = props.skills.selectedID1;
+                            let targetID2 = props.skills.selectedID2;
+                            if (!targetID1 || !targetID2) {
+                                // yeteneğini kullanmamış
+                                return;
+                            }
+                            let targetRole1 = client.findRole(tooGame, targetID1);
+                            let targetRole2 = client.findRole(tooGame, targetID2);
+                            let targetProps1 = tooGame.roleProps[targetRole1];
+                            let targetProps2 = tooGame.roleProps[targetRole2];
+    
+    
+                            if (targetProps1.skills.killVisitor && !targetProps2.skills.killVisitor) {
+                                // 1. kişinin ziyaretçi öldürme yeteneği açık
+                                client.killAtNight(tooGame, targetID2, targetID1)
+                                let infoEmbed = client.embed()
+                                    .setTitle("BAŞARILI!")
+                                    .setDescription("İki tanrı birbirine girdi ve 1 kazananı oldu.")
+                                    .setColor("GREEN")
+                                    .setFooter("Town of Olympos - #" + tooGame.id)
+                                client.sendEmbedToAlive(tooGame, infoEmbed, aliveID);
+                                return;
+                            }
+                            if (!targetProps1.skills.killVisitor && targetProps2.skills.killVisitor) {
+                                // 2. kişinin ziyaretçi öldürme yeteneği açık
+                                client.killAtNight(tooGame, targetID1, targetID2)
+                                let infoEmbed = client.embed()
+                                    .setTitle("BAŞARILI!")
+                                    .setDescription("İki tanrı birbirine girdi ve 1 kazananı oldu.")
+                                    .setColor("GREEN")
+                                    .setFooter("Town of Olympos - #" + tooGame.id)
+                                client.sendEmbedToAlive(tooGame, infoEmbed, aliveID);
+                                return;
+                            }
+                            if (targetProps1.skills.killVisitor && targetProps2.skills.killVisitor) {
+                                // 2 kişinin de ziyaretçi öldürme yeteneği açık
+                                client.killAtNight(tooGame, targetID1, targetID2)
+                                client.killAtNight(tooGame, targetID2, targetID1)
+                                let infoEmbed = client.embed()
+                                    .setTitle("BAŞARILI!")
+                                    .setDescription("İki tanrı birbirine girdi ve 2'si de birbirini öldürdü.")
+                                    .setColor("GREEN")
+                                    .setFooter("Town of Olympos - #" + tooGame.id)
+                                client.sendEmbedToAlive(tooGame, infoEmbed, aliveID);
+                                return;
+                            }
+    
+                            if (!targetProps1.killer && !targetProps2.killer) {
+                                // iki tarafın da öldürme yeteneği yok
+                                let infoEmbed = client.embed()
+                                    .setTitle("BAŞARISIZ!")
+                                    .setDescription("Çarpışma sonucu ölen olmadı.")
+                                    .setColor("RED")
+                                    .setFooter("Town of Olympos - #" + tooGame.id)
+                                client.sendEmbedToAlive(tooGame, infoEmbed, aliveID);
+                                return;
+                            }
+                            if (targetProps1.killer && !targetProps2.killer) {
+                                // 1 2 yi öldürür
+                                client.killAtNight(tooGame, targetID2, targetID1)
+                                let infoEmbed = client.embed()
+                                    .setTitle("BAŞARILI!")
+                                    .setDescription("İki tanrı birbirine girdi ve 1 kazananı oldu.")
+                                    .setColor("GREEN")
+                                    .setFooter("Town of Olympos - #" + tooGame.id)
+                                client.sendEmbedToAlive(tooGame, infoEmbed, aliveID);
+                                return;
+                            }
+                            if (!targetProps1.killer && targetProps2.killer) {
+                                // 2 1 i öldürür
+                                client.killAtNight(tooGame, targetID1, targetID2)
+                                let infoEmbed = client.embed()
+                                    .setTitle("BAŞARILI!")
+                                    .setDescription("İki tanrı birbirine girdi ve 1 kazananı oldu.")
+                                    .setColor("GREEN")
+                                    .setFooter("Town of Olympos - #" + tooGame.id)
+                                client.sendEmbedToAlive(tooGame, infoEmbed, aliveID);
+                                return;
+                            }
+                            if (targetProps1.killer && targetProps2.killer) {
+                                // iki tarafın da öldürme yeteneği var
+    
+                                let üçBüyükler = ayarlar.rolPaketleri.büyükTanrılar;
+    
+                                if (üçBüyükler.some(r => r == targetRole1) && üçBüyükler.some(r => r == targetRole2)) {
+                                    // üç büüykler kendi arasına düşmüş
+                                    let infoEmbed = client.embed()
+                                        .setTitle("BAŞARISIZ!")
+                                        .setDescription("İki tanrı birbirine girdi ama kazanan olmadı.")
+                                        .setColor("RED")
+                                        .setFooter("Town of Olympos - #" + tooGame.id)
+                                    client.sendEmbedToAlive(tooGame, infoEmbed, aliveID);
+                                } else {
+                                    let aresID = üçBüyükler.some(r => r == targetRole1) ? targetID2 : targetID1;
+                                    // üç büyükler vs ares
+                                    client.killAtNight(tooGame, aresID, aresID == targetID1 ? targetID2 : targetID1)
+                                    let infoEmbed = client.embed()
+                                        .setTitle("BAŞARILI!")
+                                        .setDescription("İki tanrı birbirine girdi ve 1 kazananı oldu.")
+                                        .setColor("GREEN")
+                                        .setFooter("Town of Olympos - #" + tooGame.id)
+                                    client.sendEmbedToAlive(tooGame, infoEmbed, aliveID);
+                                }
+    
+    
+                                return;
+                            }
+    
+                        }
+                        break;
+                    case "Hera":
+                        Hera();
+                        function Hera() {
+                            let targetID = props.skills.selectedID;
+                            if (!targetID) {
+                                // yeteneğini kullanmamış
+                                return;
+                            }
+                            let targetRole = client.findRole(tooGame, targetID);
+    
+                            if (tooGame.roleProps[targetRole].skills && tooGame.roleProps[targetRole].skills.killVisitor) {
+                                // saldırdığı kişinin ziyaretçi öldürme yeteneği açık
+                                client.killAtNight(tooGame, aliveID, targetID)
+                            }
+    
+                            let infoEmbed = client.embed()
+                                .setDescription("Ziyaret ettiğin kişi bir **" + targetRole + "**!")
+                                .setColor("GREEN")
+                                .setFooter("Town of Olympos - #" + tooGame.id)
+                            client.sendEmbedToAlive(tooGame, infoEmbed, aliveID);
+                        }
+                        break;
+                    case "Hipokrat":
+                        Hipokrat();
+                        function Hipokrat() {
+                            let targetID = props.skills.selectedID;
+                            if (!targetID) {
+                                // yeteneğini kullanmamış
+                                return;
+                            }
+                            let targetRole = client.findRole(tooGame, targetID);
+    
+                            if (tooGame.roleProps[targetRole].skills && tooGame.roleProps[targetRole].skills.killVisitor) {
+                                // saldırdığı kişinin ziyaretçi öldürme yeteneği açık
+                                client.killAtNight(tooGame, aliveID, targetID)
+                            }
+                        }
+                        break;
+                    case "Athena":
+                        Athena();
+                        function Athena() {
+                            let targetID = props.skills.selectedID;
+                            if (!targetID) {
+                                // yeteneğini kullanmamış
+                                return;
+                            }
+                            let targetRole = client.findRole(tooGame, targetID);
+    
+                            if (tooGame.roleProps[targetRole].skills && tooGame.roleProps[targetRole].skills.killVisitor) {
+                                // saldırdığı kişinin ziyaretçi öldürme yeteneği açık
+                                client.killAtNight(tooGame, aliveID, targetID)
+                            }
+    
+                            if (targetRole == "Ares" && !props.skills.killSelected) {
+                                // ares'i sorguya almış ve öldürmemiş
+                                client.killAtNight(tooGame, aliveID, targetID)
+                            }
+    
+                            if (props.skills.killSelected) {
+                                // sorguya aldığını öldürmeyi seçmiş
+                                client.killAtNight(tooGame, targetID, aliveID)
+                                let infoEmbed = client.embed()
+                                    .setTitle("SALDIRI BAŞARILI OLDU!")
+                                    .setDescription("SORGULADIĞIN KİŞİ ÖLDÜ!")
+                                    .setColor("GREEN")
+                                    .setFooter("Town of Olympos - #" + tooGame.id)
+                                client.sendEmbedToAlive(tooGame, infoEmbed, aliveID);
+                            }
+                        }
+                        break;
+                    case "Pegasus":
+                        Pegasus();
+                        function Pegasus() {
+                            let targetID = props.skills.selectedID;
+                            if (!targetID) {
+                                // yeteneğini kullanmamış
+                                return;
+                            }
+                            let targetRole = client.findRole(tooGame, targetID);
+    
+                            client.revivePlayer(tooGame, targetID, aliveID)
+                        }
+                        break;
+                    case "Artemis":
+                        Artemis();
+                        function Artemis() {
+                            let targetID = props.skills.selectedID;
+                            if (!targetID) {
+                                // yeteneğini kullanmamış
+                                return;
+                            }
+                            let targetRole = client.findRole(tooGame, targetID);
+    
+                            if (tooGame.roleProps[targetRole].skills && tooGame.roleProps[targetRole].skills.killVisitor) {
+                                // saldırdığı kişinin ziyaretçi öldürme yeteneği açık
+                                client.killAtNight(tooGame, aliveID, targetID)
+                            }
+    
+                            if (tooGame.roleProps[targetRole].isProtected) {// saldırdığı kişinin koruması var
+                                let infoEmbed = client.embed()
+                                    .setTitle("SALDIRI BAŞARISIZ OLDU!")
+                                    .setDescription("SEÇTİĞİN KİŞİDE KORUMA VAR!")
+                                    .setColor("RED")
+                                    .setFooter("Town of Olympos - #" + tooGame.id)
+                                client.sendEmbedToAlive(tooGame, infoEmbed, aliveID);
+                                return;
+                            }
+    
+                            if (ayarlar.sınıflandırma.iyi.some(r => r == targetRole)) {
+                                // masum birini öldürmüş
+                                db.set(`tooGames_${guild.id}.${tooGame.id}.roleProps.${"Artemis"}.suicide`, true);
+                            }
+    
+                            client.killAtNight(tooGame, targetID, aliveID)
+                            let infoEmbed = client.embed()
+                                .setTitle("SALDIRI BAŞARILI OLDU!")
+                                .setDescription("SEÇTİĞİN KİŞİ ÖLDÜ!")
+                                .setColor("GREEN")
+                                .setFooter("Town of Olympos - #" + tooGame.id)
+                            client.sendEmbedToAlive(tooGame, infoEmbed, aliveID);
+                        }
+                        break;
+                    default:
+                        return;
+                        break;
+                }
+                */
